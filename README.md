@@ -1,96 +1,53 @@
 # 🛠️ Team Shell Scripts
 
 A centralized repository for shared shell scripts used across the development team.
+Scripts are **grouped by domain** and available for both **zsh** and **PowerShell**.
+
+---
 
 ## How it works
 
-- Scripts are **grouped by domain** (e.g. `git-utils`, `rabbitmq-utils`).
-- A single `source` line is added to your `~/.zshrc` — pointing to this repo.
+- Clone the repo **once**, run the installer for your shell.
+- A single `source` / dot-source line is added to your shell profile.
 - **Updates are just a `git pull`** — no reinstall ever needed.
+- Scripts are grouped into plugins (e.g. `git-utils`, `rabbitmq-utils`).
+  Adding a new group requires only a new file — no loader changes.
 
 ---
 
-## 🚀 Installation (one-time setup)
+## 🐚 zsh (macOS / Linux)
 
 ```zsh
-git clone <this-repo-url> ~/team-scripts
+git clone <repo-url> ~/team-scripts
 cd ~/team-scripts
 zsh sh/install.zsh
-source ~/.zshrc   # or open a new terminal
+source ~/.zshrc
 ```
 
-That's it. All scripts and aliases are now available in your shell.
+➡️ See [`sh/README.md`](./sh/README.md) for available commands and how to add plugins.
 
 ---
 
-## 🔄 Updating
+## 💙 PowerShell (Windows / macOS / Linux)
 
-```zsh
-cd ~/team-scripts   # wherever you cloned the repo
-git pull
+```powershell
+git clone <repo-url> ~/team-scripts
+cd ~/team-scripts
+pwsh ps/install.ps1
+. $PROFILE
 ```
 
-No further action needed — the loader picks up new scripts automatically.
+➡️ See [`ps/README.md`](./ps/README.md) for available commands and how to add plugins.
 
 ---
 
-## 🗑️ Uninstalling
+## 🔄 Updating (both shells)
 
-```zsh
-zsh sh/uninstall.zsh
+```bash
+cd ~/team-scripts && git pull
 ```
 
-This removes the `source` block added to `~/.zshrc`.
-
----
-
-## 📦 Available Script Groups
-
-### `git-utils`
-
-Git productivity aliases and functions.
-
-| Command / Alias | Description |
-|---|---|
-| `gs` | Short `git status -sb` |
-| `glog` | Pretty graph log |
-| `gpush` | Push current branch |
-| `gpull` | Pull with rebase |
-| `gclean [base]` | Delete merged branches (default base: `main`) |
-| `gnew <branch> [base]` | Create branch from latest base and push |
-| `gundo` | Undo last commit, keep changes staged |
-
-### `rabbitmq-utils`
-
-RabbitMQ management helpers via the HTTP API. Requires `curl` and `jq`.
-
-**Configuration** (optional overrides in your `~/.zshrc`):
-```zsh
-export RABBITMQ_HOST=http://my-rabbit:15672
-export RABBITMQ_USER=admin
-export RABBITMQ_PASS=secret
-```
-
-| Command | Description |
-|---|---|
-| `rmq-status` | Cluster overview |
-| `rmq-queues` | List queues with message counts |
-| `rmq-purge <queue>` | Purge all messages from a queue |
-| `rmq-publish <queue> <msg>` | Publish a test message |
-
----
-
-## ➕ Adding a New Script Group
-
-1. Create a folder under `sh/`:
-   ```
-   sh/my-new-group/
-   └── my-new-group.plugin.zsh
-   ```
-2. Write your aliases and functions inside `my-new-group.plugin.zsh`.
-3. Commit and push.
-
-The loader auto-discovers all `*.plugin.zsh` files — **no other changes needed**.
+That's it — no reinstall needed.
 
 ---
 
@@ -99,20 +56,30 @@ The loader auto-discovers all `*.plugin.zsh` files — **no other changes needed
 ```
 shell-scripts/
 ├── README.md
-└── sh/
-    ├── install.zsh          ← one-time installer
-    ├── uninstall.zsh        ← removes the ~/.zshrc entry
-    ├── loader.zsh           ← auto-sourced, discovers all plugins
+├── sh/                              # zsh scripts
+│   ├── README.md
+│   ├── install.zsh                  ← one-time installer
+│   ├── uninstall.zsh                ← clean removal
+│   ├── loader.zsh                   ← auto-discovers *.plugin.zsh files
+│   ├── git-utils/
+│   │   └── git-utils.plugin.zsh
+│   └── rabbitmq-utils/
+│       └── rabbitmq-utils.plugin.zsh
+└── ps/                              # PowerShell scripts
+    ├── README.md
+    ├── install.ps1                  ← one-time installer
+    ├── uninstall.ps1                ← clean removal
+    ├── loader.ps1                   ← auto-discovers *.plugin.ps1 files
     ├── git-utils/
-    │   └── git-utils.plugin.zsh
+    │   └── git-utils.plugin.ps1
     └── rabbitmq-utils/
-        └── rabbitmq-utils.plugin.zsh
+        └── rabbitmq-utils.plugin.ps1
 ```
 
 ---
 
 ## 🔮 Roadmap
 
-- [ ] PowerShell equivalents for Windows developers
 - [ ] `docker-utils` group
 - [ ] `k8s-utils` group
+- [ ] `aws-utils` group
